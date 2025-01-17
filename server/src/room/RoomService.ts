@@ -40,4 +40,13 @@ export class RoomService {
         if (room.players.length == RoomConfig.maxRoomPlayers) room.occupied = true;
         return room;  
     }
+
+    public removePlayer(player: Player) {
+        const room = this.rooms.find((item) => item.players.includes(player));
+        if (room == undefined) return;
+        room.players = room.players.filter((item) => item.id != player.id);
+        ServerService.getInstance().removePlayerFromRoom(player.id,room.name);
+        if (room.players.length < 4) room.occupied = false;
+    }
+
 }

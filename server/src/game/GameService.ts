@@ -33,6 +33,19 @@ export class GameService {
         }
     }
 
+    public removePlayer(player: Player) {
+        const game: Game | undefined = this.games.find((item) => item.room.players.includes(player));
+        if (game == undefined) return;
+        const playerList = game.room.players.filter((item) => item.id == player.id);
+        let total = 0;
+        let count = 0;
+        playerList.forEach((item) => {
+            if(item.id == player.id){
+
+            }
+        });
+    }
+
     public addPlayer(player: Player): boolean {
         const room: Room = RoomService.getInstance().addPlayer(player);
         const genRanHex = (size: Number) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
@@ -60,4 +73,5 @@ export class GameService {
 
         return false;
     }
+
 }

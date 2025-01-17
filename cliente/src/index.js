@@ -1,5 +1,5 @@
 import { io } from "../node_modules/socket.io-client/dist/socket.io.esm.min.js";
-import MapHandler from "./MapHandler.js";
+import MapHandler from "./mapper/MapHandler.js";
 
 const socket = io("http://localhost:3000");
 socket.on("connection", (data) => {

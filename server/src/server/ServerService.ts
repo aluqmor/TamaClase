@@ -4,6 +4,7 @@ import { Directions, Player, PlayerStates } from '../player/entities/Player';
 import { GameService } from '../game/GameService';
 import { BoardBuilder } from '../game/BoardBuilder';
 import { Board } from '../game/entities/Board';
+import { RoomService } from '../room/RoomService';
 
 export class ServerService {
     private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> | null;
@@ -11,6 +12,7 @@ export class ServerService {
     private messages = [
         ""
     ]
+    private rooms : [] = [];
 
     private static instance: ServerService;
     private constructor() {
@@ -45,12 +47,17 @@ export class ServerService {
             
             socket.on('disconnect', () => {
                 console.log('Un cliente se ha desconectado:', socket.id);
+                RoomService.getInstance().removePlayer(GameService.getInstance().buildPlayer(socket));
             });
         });
     }
 
     public addPlayerToRoom(player : Socket, room: String) {
         player.join(room.toString());
+    }
+
+    public removePlayerFromRoom(player : Socket, room: String) {
+        player.leave(room.toString());
     }
 
     public gameStartMessage() {
@@ -64,5 +71,14 @@ export class ServerService {
 
     public isActive() {
         return this.active;
+    }
+
+    public reducer(message: String, action:{type: String, payload: any}) {
+        switch (action.type) {
+            case "sendMap":
+                return [...message, action.payload];
+            default:
+                return message;
+        }
     }
 }
